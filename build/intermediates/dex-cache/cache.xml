@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="D:\Ranjan Softwae\android software\Android 64bit Setup\Android adt-bundle(API 18)\adt-bundle-windows-x86-20130917\sdk\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="D:\Ranjan Softwae\RanjanWorksapceStudio\WebViewBrawseImage1\app\build\intermediates\pre-dexed\debug\support-v4-18.0.0-f8f7de395d52230590c6cbeb3b3ed6e674a31178.jar" />
+    </item>
+
+</items>
