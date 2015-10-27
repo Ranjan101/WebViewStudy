@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -8,20 +9,32 @@
 <h1>Web View Demo</h1>
 <br>
 <input type="button" value="Say hello"
-       onClick="showAndroidToast('Hello Android!')" />
-<br />
+       onClick="showAndroidToast('Hello Android!')"/>
+<br/>
+<br>
+<input type="button" value="Choose Camera"
+       onClick="chooseCamera('This is camera')"/>
+<br/>
+<input type="button" value="Open Dialog"
+       onClick="showMyDialog()"/>
+<br>
+<br>
+
+
+<br/>
 File Uri: <label id="lbluri">no file uri</label>
-<br />
-<form>
-    <input type="file" accept="image/*;capture=camera"/>
-    <input type="camera"/>
-</form>
+<br/>
+
 File Path: <label id="lblpath">no file path</label>
-<br />
-<input type="button" value="Choose Photo" onClick="choosePhoto()" />
+<br/>
+<input type="button" value="Choose Photo" onClick="choosePhoto()"/>
 <script type="text/javascript">
         function showAndroidToast(toast) {
             Android.showToast(toast);
+        }
+        function chooseCamera(toast) {
+            var file = Android.openCamera();
+            window.alert("file = " + file);
         }
         function setFilePath(file) {
             document.getElementById('lblpath').innerHTML = file;
@@ -35,6 +48,17 @@ File Path: <label id="lblpath">no file path</label>
             var file = Android.choosePhoto();
             window.alert("file = " + file);
         }
-    </script>
+        function showMyDialog() {
+           Android.alert("Hello There ");
+        }
+
+
+
+
+
+
+
+
+</script>
 </body>
 </html>

@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class ShowWebView extends Activity {
 
@@ -26,7 +29,8 @@ public class ShowWebView extends Activity {
     private ValueCallback<Uri> mUploadMessage;
     private Uri mCapturedImageURI = null;
 
-    final int SELECT_PHOTO = 1;
+    final int SELECT_GALLERY_PHOTO = 1;
+    final int SELECT_CAMERA_PHOTO = 2;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -50,11 +54,14 @@ public class ShowWebView extends Activity {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setPluginState(PluginState.ON);
         webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportZoom(true);
-       webView.addJavascriptInterface(new MyJavascriptInterface(this), "Android");
+        webView.addJavascriptInterface(new MyJavascriptInterface(this), "Android");
 
-        //webView.loadUrl("file:///android_asset/webdemo.html");we
-        webView.loadUrl(webViewUrl);
+        webView.loadUrl("file:///android_asset/webdemo.html");
+
+
+        //webView.loadUrl(webViewUrl);
 
     }
 
@@ -83,22 +90,51 @@ public class ShowWebView extends Activity {
             String file = "test";
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            startActivityForResult(photoPickerIntent, SELECT_GALLERY_PHOTO);
             return file;
         }
+
+        @JavascriptInterface
+        public String openCamera() {
+            String file = "test";
+            File baseDirectory = new File(Environment.getExternalStorageDirectory(), "video_thumb.png");
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(baseDirectory));
+            startActivityForResult(cameraIntent, SELECT_CAMERA_PHOTO);
+            return file;
+        }
+
+
+
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
-            case SELECT_PHOTO:
+            case SELECT_GALLERY_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = intent.getData();
                     webView.loadUrl("javascript:setFileUri('" + selectedImage.toString() + "')");
                     String path = getRealPathFromURI(this, selectedImage);
                     webView.loadUrl("javascript:setFilePath('" + path + "')");
                 }
+                break;
+            case SELECT_CAMERA_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Uri outputFileUri = null;
+                    try {
+                        outputFileUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+                                "video_thumb.png"));
+                        webView.loadUrl("javascript:setFileUri('" + outputFileUri.toString() + "')");
+                        // String path = getRealPathFromURI(this, );
+                        webView.loadUrl("javascript:setFilePath('" + outputFileUri.toString() + "')");
+                    } catch (Exception e) {
+                        Toast.makeText(ShowWebView.this, "Please Try Again", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+
         }
 
     }
